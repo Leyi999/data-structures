@@ -1,27 +1,34 @@
 #define _CRT_SECURE_NO_WARNINGS 1
 #include"SingleList.h"
 int main() {
-	SingleListNode* slist = NULL;
-	SingleListPushBack(&slist,1);
+	SL* slist = NULL;
+	SingleListPushFront(&slist,1);
+	PrintSList(slist);
+	SingleListPushFront(&slist, 9);
 	PrintSList(slist);
 	SingleListPushBack(&slist, 2);
+	PrintSList(slist);
 	SingleListPushBack(&slist, 3);
+	PrintSList(slist);
 	SingleListPushBack(&slist, 4);
 	PrintSList(slist);
-	SingleListPopBack(&slist);
+	SingleListInsertAfter(slist, SingleListFind(slist,4), 5);
+	//PrintSList(slist);
+	//SingleListPopBack(&slist);
+	//PrintSList(slist);
+	//SingleListPopBack(&slist);
+	//PrintSList(slist);
 	PrintSList(slist);
-	SingleListPopBack(&slist);
+	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
 	PrintSList(slist);
-
-	SingleListPopFront(&slist);
+	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
 	PrintSList(slist);
-	SingleListPopFront(&slist);
+	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
+	PrintSList(slist);	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
 	PrintSList(slist);
-	SingleListPopFront(&slist);
+	SingleListInsertAfter(slist, SingleListFind(slist, 9), 9);
 	PrintSList(slist);
-	SingleListPopFront(&slist);
+	SingleListInsertAfter(slist, SingleListFind(slist, 9), 9);
 	PrintSList(slist);
-	SingleListPopFront(&slist);
-	PrintSList(slist); 	
 	return 0;
 }
