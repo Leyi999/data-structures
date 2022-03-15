@@ -2,33 +2,22 @@
 #include"SingleList.h"
 int main() {
 	SL* slist = NULL;
-	SingleListPushFront(&slist,1);
+	SingleListPushFront(&slist, 1);
 	PrintSList(slist);
-	SingleListPushFront(&slist, 9);
+	SingleListPushFront(&slist, 2);
 	PrintSList(slist);
-	SingleListPushBack(&slist, 2);
+	SingleListPushFront(&slist, 4);
 	PrintSList(slist);
-	SingleListPushBack(&slist, 3);
+	SingleListErase(&slist, SingleListFind(slist, 2));
 	PrintSList(slist);
-	SingleListPushBack(&slist, 4);
+	SingleListPushFront(&slist, 2);
 	PrintSList(slist);
-	SingleListInsertAfter(slist, SingleListFind(slist,4), 5);
-	//PrintSList(slist);
-	//SingleListPopBack(&slist);
-	//PrintSList(slist);
-	//SingleListPopBack(&slist);
-	//PrintSList(slist);
+	SingleListEraseAfter(slist);
 	PrintSList(slist);
-	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
+	SingleListMotify(SingleListFind(slist, 9),999);
 	PrintSList(slist);
-	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
-	PrintSList(slist);
-	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
-	PrintSList(slist);	SingleListInsertBefore(&slist, SingleListFind(slist, 9), 0);
-	PrintSList(slist);
-	SingleListInsertAfter(slist, SingleListFind(slist, 9), 9);
-	PrintSList(slist);
-	SingleListInsertAfter(slist, SingleListFind(slist, 9), 9);
-	PrintSList(slist);
+
+	
+
 	return 0;
 }

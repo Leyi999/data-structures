@@ -46,18 +46,6 @@ void SingleListPopFront(SLN** pplist) {
 	*pplist = (*pplist)->next;
 	free(plist);
 }
-void PrintSList(SLN* plist) {
-	if (!plist) {
-		printf("                         (NULL)                       \n");
-		return;
-	}
-	SLN* cur = plist;
-	while (cur) {
-		printf("%d ", cur->data);
-		cur=cur->next;
-	}
-	printf("\n");
-}
 
 SLN* SingleListFind(SLN* pplist, SLNDataType x)
 {
@@ -70,13 +58,13 @@ SLN* SingleListFind(SLN* pplist, SLNDataType x)
 	}
 	return NULL;
 }
-void SingleListInsertAfter(SLN* plist, SLN* pos, SLNDataType x)
+void SingleListInsert(SLN* plist, SLN* pos, SLNDataType x)
 {
 	if (!plist) {
-		printf("plist=NULL!\n");
+		printf("SingleListInsert:: plist=NULL!\n");
 	}
 	if (!pos) {
-		printf("pos=NULL!\n");
+		printf("SingleListInsert:: pos=NULL\n");
 		return;
 	}
 	SLN* newnode = BuySListNode(x);
@@ -88,11 +76,11 @@ void SingleListInsertBefore(SLN** pplist, SLN* pos, SLNDataType x)
 {
 	assert(pplist);
 	if (!pos) {
-		printf("pos = NULL!\n");
+		printf(" SingleListInsertBefore fail:: pos = NULL!\n");
 		return;
 	}
 	if (!*pplist) {
-		printf("plist=NULL!\n");
+		printf("SingleListInsertBefore fail:: plist=NULL!\n");
 		return;
 	}
 	SLN* newnode = BuySListNode(x);
@@ -107,4 +95,71 @@ void SingleListInsertBefore(SLN** pplist, SLN* pos, SLNDataType x)
 	}
 	newnode->next = cur->next;
 	cur->next = newnode;
+}
+void SingleListErase(SLN** pplist, SLN* pos) {
+	assert(pplist);
+	if (!pos) {
+		printf("SingleListErase fail:: pos=NULL!\n");
+		return;
+	}
+	if (!*pplist) {
+		printf("SingleListErase fail:: plist=NULL!\n");
+		return;
+	}
+	if (*pplist == pos) {
+		*pplist = pos->next;
+		free(pos);
+		pos = NULL;
+		return;
+	}
+	SLN* cur = *pplist;
+	while (cur->next != pos) {
+		cur = cur->next;
+	}
+	cur->next = pos->next;
+	free(pos);
+}
+void SingleListEraseAfter(SLN*pos) {
+	if (!pos) {
+		printf("SingleListEraseAfter fail:: pos=NULL!\n");
+		return;
+	}
+	SLN* next = pos->next;
+	if (next) {
+		pos->next = next->next;
+		free(next);
+		next = NULL;
+	}
+}
+void SingleListMotify(SLN* pos, SLNDataType x) {
+	if (!pos) {
+		printf("SingleListMotify fail:: pos=NULL!\n");
+		return;
+	}
+	pos->data = x;
+}
+void PrintSList(SLN* plist) {
+	if (!plist) {
+		printf("                         (NULL)                       \n");
+		return;
+	}
+	SLN* cur = plist;
+	while (cur) {
+		printf("%d ", cur->data);
+		cur=cur->next;
+	}
+	printf("\n");
+}
+void SingleListDestroy(SLN** pplist) {
+	assert(pplist);
+	if (!*pplist)return;
+	SLN* cur = *pplist;
+	SLN* pev = NULL;
+	while (cur) {
+		pev = cur;
+		cur = cur->next;
+		free(pev);
+		pev = NULL;
+	}
+	*pplist = NULL;
 }
