@@ -52,8 +52,11 @@ void testerase() {
 	ListPrint(head);
 	ListErase(head->next->next->next);
 	ListPrint(head);
+	ListErase(head);
+	ListPrint(head);
 	ListDestory(head);
 }
 int main() {
+	testerase();
 	return 0;
 }
