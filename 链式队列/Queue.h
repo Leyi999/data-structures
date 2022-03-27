@@ -4,10 +4,10 @@
 #include<stdbool.h>
 #include<assert.h>
 
-typedef int QueueNodeType;
+typedef int QueueNodeDataType;
 
 typedef struct QueueNode{
-	QueueNodeType val;
+	QueueNodeDataType val;
 	struct QueueNode* next;
 } QueueNode;
 
@@ -19,12 +19,12 @@ typedef struct Queue {
 
 void QueueInit(Queue* pq);
 void QueueDestroy(Queue* pq);
-void QueuePush(Queue* pq, QueueNodeType x);
+void QueuePush(Queue* pq, QueueNodeDataType x);
 void QueuePop(Queue* pq);
 
 bool QueueEmpty(Queue* pq);	
 
 size_t QueueSize(Queue* pq);
 
-QueueNodeType QueueFront(Queue* pq);
-QueueNodeType QueueBack(Queue* pq);
+QueueNodeDataType QueueFront(Queue* pq);
+QueueNodeDataType QueueBack(Queue* pq);

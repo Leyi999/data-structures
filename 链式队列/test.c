@@ -14,7 +14,6 @@ int main() {
 	printf("%u ", test.size);
 	QueueDestroy(ptest);
 	printf("%u ", QueueEmpty(ptest));
-
 	return 0;
 
 

@@ -21,7 +21,7 @@ void QueueDestroy(Queue* pq)
 	}
 }
 
-void QueuePush(Queue* pq,QueueNodeType x)
+void QueuePush(Queue* pq,QueueNodeDataType x)
 {
 	assert(pq);
 	QueueNode* newnode;
@@ -71,14 +71,14 @@ size_t QueueSize(Queue* pq)
 	return pq->size;
 }
 
-QueueNodeType QueueFront(Queue* pq)
+QueueNodeDataType QueueFront(Queue* pq)
 {	
 	assert(pq);
 	assert(pq->head);
 	return pq->head->val;
 }
 
-QueueNodeType QueueBack(Queue* pq)
+QueueNodeDataType QueueBack(Queue* pq)
 {
 	assert(pq);
 	assert(pq->tail);
