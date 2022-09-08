@@ -6,6 +6,7 @@
 using  std::cout;
 using std::endl;
 using std:: queue;
+
 template <class K, class V>
 struct pair
 {
@@ -49,7 +50,7 @@ struct AVLTree {
 		cur = newnode;
 		newnode->_parent = pev;
 		//调整平衡因子
-		pev = cur;
+		
 		while (cur != _root) {
 			cur->_parent->_bf += cur == cur->_parent->_left ? -1 : 1;
 			pev = cur;
@@ -58,30 +59,38 @@ struct AVLTree {
 				break;
 		}
 		if (abs(cur->_bf) > 1) {
-			if (cur->_bf == 2)
+			if (cur->_bf == 2) {
 				if (pev->_bf == 1)
-					left_adjust(cur);
+					RotateL(cur);
+				else if (pev->_bf == -1)
+					RotateRL(cur);
 				else
-					right_left_adjust(cur);
-			else if (cur->_bf == -2)
+					assert(false);
+			}
+			else if (cur->_bf == -2) {
 				if (pev->_bf == -1)
-					right_adjust(cur);
+					RotateR(cur);
+				else if (pev->_bf == 1)
+					RotateLR(cur);
 				else
-					left_right_adjust(cur);
+					assert(false);
+			}
+			//错误代码
 			//if (pev == cur->_right)
 			//	if (!pev->_right || pev->_left && pev->_left->_bf)
-			//		right_left_adjust(cur);
+			//		RotateRL(cur);
 			//	else
-			//		left_adjust(cur);
+			//		RotateL(cur);
 			//else
 			//	if (!pev->_left || pev->_right && pev->_right->_bf)
-			//		left_right_adjust(cur);
+			//		RotateLR(cur);
 			//	else
-			//		right_adjust(cur);
+			//		RotateR(cur);
 		}
 		return true;
 	}
-	void left_adjust(Node* cur) {
+
+	void RotateL(Node* cur) {
 		Node* parent = cur->_parent;
 		Node* subR = cur->_right;
 		Node* subRL = cur->_right->_left;
@@ -104,7 +113,8 @@ struct AVLTree {
 		cur->_bf = subR->_bf = 0;
 
 	}
-	void right_adjust(Node* cur) {
+
+	void RotateR(Node* cur) {
 		Node* parent = cur->_parent;
 		Node* subL = cur->_left;
 		Node* subLR = cur->_left->_right;
@@ -124,16 +134,13 @@ struct AVLTree {
 		}
 		cur->_bf = subL->_bf = 0;
 	}
-	void left_right_adjust(Node* cur) {
+	
+	void RotateLR(Node* cur) {
 		Node* subL = cur->_left;
 		Node* subLR = subL->_right;
-		if (!subLR) {
-			right_left_adjust(cur);
-			return;
-		}
 		int c = subLR->_bf;
-		left_adjust(subL);
-		right_adjust(cur);
+		RotateL(subL);
+		RotateR(cur);
 		//共三种模型 -已拍照
 		switch (c)
 		{
@@ -153,17 +160,18 @@ struct AVLTree {
 			break;
 		}
 	}
-	void right_left_adjust(Node* cur) {
+
+	void RotateRL(Node* cur) {
 		Node* subR = cur->_right;
 		Node* subRL = subR->_left;
 		int c = subRL->_bf;
-		right_adjust(subR);
-		left_adjust(cur);
+		RotateR(subR);
+		RotateL(cur);
 		//三种模型
 		switch (c){
 		case -1:
 			subRL->_bf = cur->_bf = 0;
-			subR->_bf = -1;
+			subR->_bf = 1;
 			break;
 		case 0:
 			subRL->_bf = subR->_bf = cur->_bf = 0;
