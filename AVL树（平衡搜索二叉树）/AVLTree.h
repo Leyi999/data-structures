@@ -30,7 +30,8 @@ struct AVLTreeNode {
 	int _bf;
 };
 template<class K,class V>
-struct AVLTree {
+class AVLTree {
+public:
 	typedef AVLTreeNode<K, V> Node;
 	bool insert(const pair<K, V>& kv) {
 		if (!_root) {
@@ -89,7 +90,71 @@ struct AVLTree {
 		}
 		return true;
 	}
+	void LevelOrder() {
+		if (!_root)
+			return;
+		Node* cur = _root;
+		queue<Node*> qu;
+		int levelsize = 1;
+		qu.push(_root);
+		while (!qu.empty()) {
+			while (levelsize--) {
+				Node* front = qu.front();
+				if (front->_left)
+					qu.push(front->_left);
+				if (front->_right)
+					qu.push(front->_right);
+				cout << front->_kv.first << " ";
+				qu.pop();
+			}
+			levelsize = qu.size();
+			cout << endl;
+		}
+	}
+	int _Height(Node* root=_root)
+	{
+		if (root == nullptr)
+			return 0;
 
+		int lh = _Height(root->_left);
+		int rh = _Height(root->_right);
+
+		return lh > rh ? lh + 1 : rh + 1;
+	}
+	bool IsBalanceTree()
+	{
+		return _IsBalanceTree(_root);
+	}
+private:
+	bool _IsBalanceTree(Node* root)
+	{
+		// 空树也是AVL树
+		if (nullptr == root)
+			return true;
+
+		// 计算pRoot节点的平衡因子：即pRoot左右子树的高度差
+		int leftHeight = _Height(root->_left);
+		int rightHeight = _Height(root->_right);
+		int diff = rightHeight - leftHeight;
+
+		// 如果计算出的平衡因子与pRoot的平衡因子不相等，或者
+		// pRoot平衡因子的绝对值超过1，则一定不是AVL树
+		if (abs(diff) >= 2)
+		{
+			cout << root->_kv.first << "节点平衡因子异常" << endl;
+			return false;
+		}
+
+		if (diff != root->_bf)
+		{
+			cout << root->_kv.first << "节点平衡因子不符合实际" << endl;
+			return false;
+		}
+
+		// pRoot的左和右如果都是AVL树，则该树一定是AVL树
+		return _IsBalanceTree(root->_left)
+			&& _IsBalanceTree(root->_right);
+	}
 	void RotateL(Node* cur) {
 		Node* parent = cur->_parent;
 		Node* subR = cur->_right;
@@ -185,26 +250,7 @@ struct AVLTree {
 			break;
 		}
 	}
-	void LevelOrder() {
-		if (!_root)
-			return;
-		Node* cur = _root;
-		queue<Node*> qu;
-		int levelsize = 1;
-		qu.push(_root);
-		while (!qu.empty()) {
-			while (levelsize--) {
-				Node* front = qu.front();
-				if (front->_left)
-					qu.push(front->_left);
-				if (front->_right)
-					qu.push(front->_right);
-				cout << front->_kv.first << " ";
-				qu.pop();
-			}
-			levelsize = qu.size();
-			cout << endl;
-		}
-	}
+
+
 	Node* _root=nullptr;
 };
