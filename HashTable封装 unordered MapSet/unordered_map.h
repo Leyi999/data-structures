@@ -20,17 +20,17 @@ public:
 	iterator end() {
 		return ht.end();
 	}
-	const_iterator begin()const {
-		return ht.cbegin();
-	}
-	const_iterator end()const {
-		return ht.cend();
-	}
 	pair<iterator,bool> insert(const pair<K, V>& kv) {
 		return ht.Insert(kv);
 	}
 	V& operator[](const K& key) {
 		return insert(make_pair(key, V())).first->second;
+	}
+	iterator find(const K& key) {
+		return ht.Find();
+	}
+	bool erase(const K& key) {
+		return ht.erase();
 	}
 private:
 	HashTable<K, pair<K,V>, KeyOfT,HSF> ht;

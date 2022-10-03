@@ -20,7 +20,7 @@ using namespace std;
 		}
 	};
 	//提前声明
-	template<class K, class T, class KOT, class Ref, class Ptr, class HSF = DefultHSF<K>>
+	template<class K, class T, class KOT, class HSF = DefultHSF<K>>
 	struct __iterator;
 	//开散列
 	// 不在直接存kv，存T，T可能是pair或者k，用配套的kot取key
@@ -41,11 +41,21 @@ using namespace std;
 	struct HashTable
 	{
 	public:
-		template<class K, class T, class KOT, class Ref, class Ptr, class HSF >
+		template<class K, class T, class KOT, class HSF >
 		friend struct __iterator;
-		typedef __iterator<K, T, KOT, T&, T*, HSF> iterator;
-		typedef __iterator<K, T, KOT, const T&, const T*, HSF> const_iterator;
-
+		typedef __iterator<K, T, KOT,  HSF> iterator;
+		typedef __iterator<K, T, KOT,  HSF> const_iterator;
+		HashTable() {
+			;
+		}
+		HashTable(const HashTable& ht) {
+			for (auto e : ht._vt)
+				Insert(e);
+		}
+		HashTable& operator =(HashTable ht) {
+			_vt.swap(ht._vt);
+			return *this;
+		}
 		iterator begin() {
 			for (const auto& e : _vt) {
 				if (e)
@@ -55,16 +65,6 @@ using namespace std;
 		}
 		iterator end() {
 			return iterator(nullptr, this);
-		}
-		const_iterator cbegin()const {
-			for (const auto& e : _vt) {
-				if (e)
-					return const_iterator(e, this);
-			}
-			return cend();
-		}
-		const_iterator cend()const {
-			return const_iterator(nullptr, this);
 		}
 		
 		typedef HashData<T> Node;
@@ -81,9 +81,12 @@ using namespace std;
 		}
 		pair<iterator,bool> Insert(const T& data) {
 			KOT kot;
+			if (Find(kot(data)))
+				return make_pair(iterator(nullptr,this),false);
 			//负载因子超标（1.0）或者 vector size为0（vector[]禁止访问超过size的部分）扩容
 			if (!_vt.size() || _n * 100 / _vt.size() >= 100)
-				Reserve(_vt.size() ? 2 * _vt.size() : 10);
+				//Reserve(_vt.size() ? 2 * _vt.size() : 10);
+				Reserve(GetNextPrime(_vt.size()));//用素数可以一定程度上降低冲突
 			HSF hf;
 			size_t start = hf(kot(data)) % _vt.size();//key转化为映射值
 			auto newnode= new Node(data) ;
@@ -92,34 +95,22 @@ using namespace std;
 			_n++;
 			return make_pair(iterator(newnode, this), true);
 		}
-		Node* Find(const K& key) {
+
+		iterator Find(const K& key)const {
 			KOT kot;
 			HSF hf;
 			if (_vt.size() == 0)
-				return nullptr;
+				return iterator(nullptr,this);
 			size_t start = hf(key) % _vt.size();
 			Node* cur = _vt[start];
 			while (cur) {
 				if (kot(cur->_data) == key)
-					return cur;
+					return iterator(cur,this);
 				cur = cur->_next;
 			}
-			/*		size_t i = 1;
-			for (size_t cur = start; _vt[cur]._st != state::EMPTY; cur = start + i) {
-				cur %= _vt.size();
-				if (_vt[cur]._st != state::DELETED && _vt[cur]._kv.first == key)
-					return &_vt[cur];
-				i++;
-			}*/
-			return nullptr;
+			return iterator(nullptr, this);
 		}
 		bool erase(const K& key) {
-			/*Node* f_ret = Find(key);
-			if (f_ret) {
-				f_ret->_st = state::DELETED;
-				_n--;
-				return true;
-			}*/
 			//单链表删除要保存pev,所以不能复用find
 			//直接用双向带头循环也可以（list容器），但单链表已经足够，且不复用也不影响效率。
 			HSF hsf;
@@ -140,7 +131,33 @@ using namespace std;
 			return false;
 		}
 	private:
+		size_t GetNextPrime(size_t prime)const
+		{
+			const int PRIMECOUNT = 28;
+			static const size_t primeList[PRIMECOUNT] =
+			{
+				53ul, 97ul, 193ul, 389ul, 769ul,
+				1543ul, 3079ul, 6151ul, 12289ul, 24593ul,
+				49157ul, 98317ul, 196613ul, 393241ul, 786433ul,
+				1572869ul, 3145739ul, 6291469ul, 12582917ul, 25165843ul,
+				50331653ul, 100663319ul, 201326611ul, 402653189ul, 805306457ul,
+				1610612741ul, 3221225473ul, 4294967291ul
+			};
+
+			// 获取比prime大那一个素数
+			size_t i = 0;
+			for (; i < PRIMECOUNT; ++i)
+			{
+				if (primeList[i] > prime)
+					return primeList[i];
+			}
+
+			return primeList[i];
+		}
 		void Reserve(size_t newsize) {
+			//超极端场景
+			if (newsize == _vt.size())
+				return;
 			HSF hf;
 			KOT kot;
 			//转移节点
@@ -184,17 +201,17 @@ using namespace std;
 		vector<Node*> _vt;
 	};
 	//封装迭代器
-	template<class K, class T, class KOT,class Ref ,class Ptr, class HSF>
+	template<class K, class T, class KOT, class HSF>
 	struct __iterator {
 		typedef HashData<T> Node;
-		typedef __iterator<K, T, KOT, Ref, Ptr, HSF> Self;
-		HashTable<K, T, KOT, HSF>* _pht;//拿到整张表的指针
-		__iterator(Node* pnode, HashTable<K, T, KOT, HSF>* pht)
+		typedef __iterator<K, T, KOT, HSF> Self;
+		const HashTable<K, T, KOT, HSF>* _pht;//拿到整张表的指针
+		Node* _pnode;
+		__iterator( Node* pnode,  const HashTable<K, T, KOT, HSF>* pht)
 			:_pnode(pnode),_pht(pht)
 		{
 			;
 		}
-		Node* _pnode;
 		Self& operator ++() {
 			KOT kot;
 			HSF hf;
@@ -220,10 +237,10 @@ using namespace std;
 			++(*this);
 			return old;
 		}
-		Ref operator*() {
+		T& operator*() {
 			return _pnode->_data;
 		}
-		Ptr operator->() {
+		T* operator->() {
 			return &_pnode->_data;
 		}
 		bool operator!=(const Self& it)const {
@@ -231,6 +248,9 @@ using namespace std;
 		}
 		bool operator ==(const Self& it)const {
 			return it._pnode == _pnode;
+		}
+		operator bool()const{
+			return _pnode != nullptr;
 		}
 	/*	Self begin() {
 			KOT kot;

@@ -17,16 +17,15 @@ public:
 	iterator end() {
 		return ht.end();
 	}
-	const_iterator begin()const {
-		return ht.cbegin();
-	}
-	const_iterator end()const {
-		return ht.cend();
-	}
 	pair<iterator, bool> insert(const K& data) {
 		return ht.Insert(data);
 	}
-
+	iterator find(const K& key) {
+		return ht.Find();
+	}
+	bool erase(const K& key) {
+		return ht.erase();
+	}
 private:
 	HashTable<K,K,KeyOfT,HSF> ht;
 };

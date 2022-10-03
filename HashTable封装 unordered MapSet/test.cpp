@@ -3,29 +3,8 @@
 #include"HashTable.h"
 #include"unordered_map.h"
 #include"unordered_set.h"
+#include<vector>
 using namespace std;
-//
-//void TestHT3()
-//{
-//	string arr[] = { "苹果", "西瓜", "苹果", "西瓜", "苹果", "苹果", "西瓜", "苹果", "香蕉", "苹果", "香蕉" };
-//
-//	//HashTable<string, int, StringHash> countHT;
-//	HashTable<string, pair<string,int>,> countHT;
-//
-//	for (auto& str : arr)
-//	{
-//		auto ret = countHT.Find(str);
-//		if (ret)
-//		{
-//			ret->_kv.second++;
-//		}
-//		else
-//		{
-//			countHT.Insert(make_pair(str, 1));
-//		}
-//	}
-//
-//}
 void test_map()
 {
 	
@@ -42,7 +21,7 @@ void test_map()
 }
 int main() {
 	int a[] = { 20,5,8,99999,10,30,50,60,70,52,79,10,31,1498,90 };
-	 unordered_map<int ,int>  HT;
+	  unordered_map<int ,int>  HT;
 	for (const auto& e : a)
 		HT.insert(make_pair(e, e));
 	for (const auto& n : HT)
@@ -53,7 +32,7 @@ int main() {
 		HTs.insert(e);
 	for (const auto& n : HT)
 		cout << n.first << endl;
-	test_map();
+	//test_map();
 	//cout << HT.Find(99999)->_kv.first << endl;
 	//HT.erase(20);
 	//cout << HT.Find(20) << endl;
