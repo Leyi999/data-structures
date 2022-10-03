@@ -14,8 +14,8 @@
 *.la*
 *.log
 *.ope*
-*.p*
 *.re*
+*.pdb
 *.suo
 *.tlog
 *.txt
@@ -23,3 +23,4 @@
 *.xml
 *.cd
 *.sarif
+*.sqlite
