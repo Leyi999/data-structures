@@ -8,8 +8,8 @@ public:
 	bitset() {
 		_vt.resize(N / 8 + 1, 0);
 	}
-	void set(size_t num) {
-		_vt[num / 8] |= 1 << num % 8;
+	void set(size_t num) {//采取直接映射的方式 //0~7 8~15 ...
+		_vt[num / 8] |= 1 << num % 8;//将直接映射的那一位置为1
 	}
 	void reset(size_t num) {
 		_vt[num / 8] &= ~(1 << num % 8);
@@ -26,7 +26,7 @@ public:
 	void set(size_t num) {
 		bool in1 = bs1.test(num);
 		bool in2 = bs2.test(num);
-		//00 01 11
+		//00 01 11 可表示三种状态 出现一次 出现两次 和三次及以上 可根据需求改为能表示四种状态
 		if (in1 == false && in2 == false)
 			bs2.set(num);
 		if (in1 == false && in2 == true)
