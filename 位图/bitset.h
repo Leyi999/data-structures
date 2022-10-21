@@ -27,13 +27,19 @@ public:
 		bool in1 = bs1.test(num);
 		bool in2 = bs2.test(num);
 		//00 01 11
-		if (in1 == false && in2 == false)
-			bs2.set(num);
-		if (in1 == false && in2 == true)
-			bs1.set(num);
+		if (!in1 && !in2 == false)// 0 0 已经出现0次
+			bs2.set(num);// 0 1
+		else if (!in1 && in2 == true)// 0 1 已经出现1次
+			bs1.set(num), bs2.reset(num);// 1 0
+		else if (in1 && !in2)// 1 0 已经出现两次
+			bs2.set(num);// 1 1
+
 	}
 	bool is_once(size_t num) {
 		return !bs1.test(num) && bs2.test(num);
+	}
+	bool is_twice(size_t num) {
+		return bs1.test(num) && !bs2.test(num);
 	}
 private:
 	bitset<N> bs1;

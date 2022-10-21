@@ -24,7 +24,15 @@ void test_towbitset() {
 	}
 }
 int main() {
-	test_towbitset();
+	float ret = 0;
+	for (int i = 1; i <= 100; i++) {
+		float rs = (float)1 / (float)i;
+		if (i % 2 == 0)
+			rs = rs * -1;
+		ret = ret + rs;
+	}
+	printf("%lf", ret);
+	//test_towbitset();
 
 	return 0;
 }
