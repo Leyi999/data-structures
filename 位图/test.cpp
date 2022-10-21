@@ -14,25 +14,28 @@ void test_bitset(){
 	
 }
 void test_towbitset() {
-	two_bitset<10> tbs;
-	int arr[] = { 1,1,2,6,9,4,1,5,6,9,8 };
+	two_bitset<999> tbs;
+	int arr[] = { 1,1,2,6,9,4,1,5,6,9,8,999,999,999,999,12,12,12,7,7,7,874 };
 	for (auto e : arr)
 		tbs.set(e);
 	for (auto e : arr) {
 		if (tbs.is_once(e))
 			cout << e << ' ';
 	}
+	cout << endl;
+	for (auto e : arr) {
+		if (tbs.is_twice(e))
+			cout << e << ' ';
+	}
+	cout << endl;
+	for (auto e : arr) {
+		if (tbs.is_more_than_three_times(e))
+			cout << e << ' ';
+	}
 }
 int main() {
-	float ret = 0;
-	for (int i = 1; i <= 100; i++) {
-		float rs = (float)1 / (float)i;
-		if (i % 2 == 0)
-			rs = rs * -1;
-		ret = ret + rs;
-	}
-	printf("%lf", ret);
-	//test_towbitset();
+
+	test_towbitset();
 
 	return 0;
 }

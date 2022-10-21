@@ -2,7 +2,7 @@
 #include<iostream>
 #include<vector>
 using namespace std;
-template<size_t N>
+template<size_t N>//N为要设置元素的最大值
 class bitset {
 public:
 	bitset() {
@@ -28,9 +28,9 @@ public:
 		bool in2 = bs2.test(num);
 
 		//00 01 10 11 可表示三种状态 出现零次 出现一次 出现两次 出现三次及以上 
-		if (!in1 && !in2 == false)// 0 0 
+		if (!in1 && !in2 )// 0 0 
 			bs2.set(num);// 0 1
-		else if (!in1 && in2 == true)// 0 1 
+		else if (!in1 && in2 )// 0 1 
 			bs1.set(num), bs2.reset(num);// 1 0
 		else if (in1 && !in2)// 1 0 
 			bs2.set(num);// 1 1
